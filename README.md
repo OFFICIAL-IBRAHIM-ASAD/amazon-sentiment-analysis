@@ -1,3 +1,4 @@
+
 # 📦 Amazon Product Sentiment Analysis Pipeline
 
 ![CI Pipeline](https://github.com/OFFICIAL-IBRAHIM-ASAD/amazon-sentiment-analysis/actions/workflows/ci.yml/badge.svg)
@@ -17,7 +18,21 @@ An end-to-end Machine Learning pipeline that classifies Amazon customer reviews 
 * **Web Framework:** FastAPI, Uvicorn
 * **Testing/DevOps:** Pytest, GitHub Actions, WSL2 (Ubuntu)
 * **Dataset:** Amazon Customer Reviews (Fine Food & Electronics)
+  
+## 📐 Project Architecture
 
+```mermaid
+graph LR
+    User((User/Client)) -->|JSON Request| API[FastAPI Web Server]
+    
+    subgraph "Machine Learning Microservice"
+    API -->|Raw Text| VEC[TF-IDF Vectorizer]
+    VEC -->|Numerical Features| MODEL[Logistic Regression Model]
+    MODEL -->|Sentiment Score| API
+    end
+    
+    API -->|JSON Response| User
+```
 ## 📁 Project Structure
 ```text
 ├── app/
@@ -68,18 +83,3 @@ curl -X 'POST' '[http://127.0.0.1:8000/predict](http://127.0.0.1:8000/predict)' 
 Student at Beaconhouse National University (BNU)
 
 *Focusing on DevOps, Machine Learning, and Full-Stack Development.*
-
-```
-
----
-
-### How to apply this:
-1. Go to your local WSL terminal.
-2. Create/Open the file: `nano README.md`
-3. Paste the code above.
-4. Save and exit (`Ctrl+O`, `Enter`, `Ctrl+X`).
-5. Push it one last time:
-   ```bash
-   git add README.md
-   git commit -m "docs: add professional project documentation"
-   git push origin main
