@@ -1,4 +1,3 @@
-
 # 📦 Amazon Product Sentiment Analysis Pipeline
 
 ![CI Pipeline](https://github.com/OFFICIAL-IBRAHIM-ASAD/amazon-sentiment-analysis/actions/workflows/ci.yml/badge.svg)
@@ -16,7 +15,7 @@ An end-to-end Machine Learning pipeline that classifies Amazon customer reviews 
 ## 🛠️ Tech Stack
 * **Data Science:** Scikit-learn, Pandas, NumPy
 * **Web Framework:** FastAPI, Uvicorn
-* **Testing/DevOps:** Pytest, GitHub Actions, WSL2 (Ubuntu)
+* **Testing/DevOps:** Pytest, GitHub Actions, Docker, WSL2 (Ubuntu)
 * **Dataset:** Amazon Customer Reviews (Fine Food & Electronics)
   
 ## 📐 Project Architecture
@@ -25,15 +24,18 @@ An end-to-end Machine Learning pipeline that classifies Amazon customer reviews 
 graph LR
     User((User/Client)) -->|JSON Request| API[FastAPI Web Server]
     
-    subgraph "Machine Learning Microservice"
+    subgraph "ML Microservice"
     API -->|Raw Text| VEC[TF-IDF Vectorizer]
     VEC -->|Numerical Features| MODEL[Logistic Regression Model]
     MODEL -->|Sentiment Score| API
     end
     
     API -->|JSON Response| User
+
 ```
+
 ## 📁 Project Structure
+
 ```text
 ├── app/
 │   ├── main.py          # FastAPI Application
@@ -44,11 +46,13 @@ graph LR
 │   └── tfidf_vectorizer.pkl   # Fitted Vectorizer
 ├── .github/workflows/
 │   └── ci.yml           # GitHub Actions Pipeline
+├── Dockerfile           # Docker configuration blueprint
+├── .dockerignore        # Docker build exclusions
 └── requirements.txt     # Dependency List
 
 ```
 
-## 🚥 Quick Start
+## 🚥 Quick Start (Local Setup)
 
 1. **Clone the repository:**
 ```bash
@@ -58,7 +62,7 @@ cd amazon-sentiment-analysis
 ```
 
 
-2. **Run the API:**
+2. **Run the API locally:**
 ```bash
 pip install -r requirements.txt
 uvicorn app.main:app --reload
@@ -76,10 +80,45 @@ curl -X 'POST' '[http://127.0.0.1:8000/predict](http://127.0.0.1:8000/predict)' 
 
 
 
+## 🐳 Running with Docker
+
+This application is fully containerized, meaning you can run it on any machine without installing Python or configuring virtual environments.
+
+1. **Build the Docker Image:**
+```bash
+docker build -t amazon-sentiment-api:latest .
+
+```
+
+
+2. **Run the Container:**
+```bash
+docker run -d -p 8000:8000 amazon-sentiment-api:latest
+
+```
+
+
+*The API will instantly be available at `http://localhost:8000/docs`.*
+
+## 🎯 Project Scope (MVP)
+
+This project was built as a Minimum Viable Product (MVP) to demonstrate a complete, end-to-end Machine Learning lifecycle. Its current scope includes:
+
+* **Data Engineering:** Cleaning and preprocessing raw Amazon customer review text.
+* **Model Training:** Utilizing a lightweight, highly interpretable Logistic Regression model paired with TF-IDF vectorization for fast inference.
+* **Microservice Architecture:** Wrapping the model in a FastAPI server for real-time predictions.
+* **DevOps Integration:** Ensuring code reliability through automated GitHub Actions pipelines and containerizing the environment with Docker.
+
+## 📈 Future Scalability
+
+While the current architecture is highly functional, it is designed to be easily scaled for enterprise-level traffic and accuracy:
+
+1. **Cloud Deployment (Continuous Deployment):** Because the app is Dockerized, the image can be seamlessly pushed to a container registry (like Docker Hub or AWS ECR) and deployed to serverless platforms like AWS App Runner, Google Cloud Run, or a Kubernetes cluster.
+2. **Advanced NLP Models:** The current Scikit-Learn model can be swapped out for a Deep Learning Transformer model (like BERT or RoBERTa) using PyTorch or HuggingFace to capture deeper contextual nuances in complex reviews.
+3. **Database Integration:** Adding a PostgreSQL or MongoDB database to log user requests and model predictions. This allows for continuous monitoring of "Model Drift" and retraining the model on new data over time.
+
 ## 👨‍💻 Author
 
-**Ibrahim Asad**
-
-Student at Beaconhouse National University (BNU)
+**Ibrahim Asad** | Student at Beaconhouse National University (BNU)
 
 *Focusing on DevOps, Machine Learning, and Full-Stack Development.*
